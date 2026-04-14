@@ -352,12 +352,21 @@ function renderRealResults(apiData){
     document.getElementById('mFiber').style.width = Math.round(fiber /max*100)+'%';
   },120);
 
-  document.getElementById('resTags').innerHTML = `<span class="tag">AI Analyzed</span> <span class="tag g">Saved to Postgres</span>`;
-  document.getElementById('resInsights').innerHTML = `
-    <div class="insight-row">
-      <div class="ins-dot good"></div>
-      <span class="ins-text"><b>Successfully logged</b> to your food_scans database.</span>
-    </div>`;
+  const wasSaved = apiData.db_saved === true;
+  const dbError = apiData.db_error || 'Unknown database error';
+  document.getElementById('resTags').innerHTML = wasSaved
+    ? `<span class="tag">AI Analyzed</span> <span class="tag g">Saved to Postgres</span>`
+    : `<span class="tag">AI Analyzed</span> <span class="tag">DB Save Failed</span>`;
+
+  document.getElementById('resInsights').innerHTML = wasSaved
+    ? `<div class="insight-row">
+         <div class="ins-dot good"></div>
+         <span class="ins-text"><b>Successfully logged</b> to your food_scans database.</span>
+       </div>`
+    : `<div class="insight-row">
+         <div class="ins-dot" style="background:#c4623e"></div>
+         <span class="ins-text"><b>Not saved:</b> ${dbError}</span>
+       </div>`;
 }
 
 function switchTab(tab){
